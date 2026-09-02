@@ -1,339 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b1220" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Keven Tracker">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icon-180.png">
-  <title>Keven Market Tracker</title>
-  <style>
-    :root{
-      --bg:#07101d; --card:#0f1b2d; --card2:#13233a; --text:#f4f7fb;
-      --muted:#8fa2bd; --line:#213653; --good:#2bd67b; --warn:#f2c14e;
-      --bad:#ff6b6b; --accent:#67a7ff; --accent2:#8b7cff;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
-      color:var(--text);background:
-      radial-gradient(900px 500px at 15% -10%, rgba(103,167,255,.18), transparent 60%),
-      linear-gradient(180deg,#07101d 0%,#0a1422 100%);
-      min-height:100vh;padding-bottom:92px;
-    }
-    .app{max-width:760px;margin:auto;padding:18px 16px 24px}
-    .hero{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0 18px}
-    .hero h1{font-size:26px;margin:0 0 4px;letter-spacing:-.5px}
-    .hero p{margin:0;color:var(--muted);font-size:14px}
-    .badge{padding:8px 10px;border:1px solid var(--line);border-radius:999px;color:#c9d6e8;font-size:12px;background:rgba(255,255,255,.03)}
-    .panel{background:linear-gradient(180deg,var(--card),#0d1828);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 10px 35px rgba(0,0,0,.18)}
-    .panel h2{font-size:18px;margin:0 0 12px}
-    .sub{font-size:13px;color:var(--muted);margin-top:-6px;margin-bottom:12px}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-    .metric{background:var(--card2);border:1px solid var(--line);border-radius:15px;padding:12px}
-    .metric .k{font-size:12px;color:var(--muted)}
-    .metric .v{font-size:20px;font-weight:700;margin-top:3px}
-    .watch{display:grid;gap:10px}
-    .asset{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:13px;background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:16px}
-    .asset .name{font-weight:700}
-    .asset .type{font-size:12px;color:var(--muted);margin-top:2px}
-    .asset .price{font-weight:700;text-align:right}
-    .asset .score{font-size:12px;margin-top:3px;text-align:right}
-    .score.good{color:var(--good)} .score.mid{color:var(--warn)} .score.bad{color:var(--bad)}
-    button,.btn{border:0;border-radius:13px;padding:11px 13px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;cursor:pointer}
-    button.secondary{background:#182a44;border:1px solid var(--line);color:#dce7f6}
-    button.ghost{background:transparent;border:1px solid var(--line);color:#c8d7eb}
-    input,select{width:100%;background:#0a1525;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:11px 12px;font-size:15px;outline:none}
-    label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-    .three{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(7,16,29,.93);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:8px max(10px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));z-index:10}
-    .tabs-inner{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-    .tab{background:transparent;color:var(--muted);padding:10px 4px;border-radius:12px;font-size:12px}
-    .tab.active{background:#152640;color:#fff}
-    .screen{display:none}.screen.active{display:block}
-    .alert{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid var(--line);border-radius:15px;padding:12px;margin-bottom:9px}
-    .alert strong{display:block}.alert small{color:var(--muted)}
-    .pill{font-size:11px;border-radius:999px;padding:6px 8px;background:#12243c;color:#bfd1e7}
-    .note{font-size:12px;line-height:1.45;color:var(--muted)}
-    .rangegrid{display:grid;grid-template-columns:1fr 90px;gap:8px;align-items:center;margin-bottom:8px}
-    input[type=range]{padding:0}
-    .scorebox{font-size:38px;font-weight:800;letter-spacing:-1px}
-    .status{font-size:13px;font-weight:700}
-    .tiny{font-size:11px;color:var(--muted)}
-    .split{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    @media (max-width:520px){.grid,.row{grid-template-columns:1fr}.three{grid-template-columns:1fr 1fr 1fr}.hero h1{font-size:23px}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07101d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Keven Tracker">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Keven Market Tracker V2</title>
+<style>
+:root{
+ --bg:#07101d;--bg2:#0a1422;--card:#0f1b2d;--card2:#13233a;--line:#213653;
+ --text:#f5f8fc;--muted:#8ea2bd;--accent:#67a7ff;--accent2:#8b7cff;
+ --good:#2bd67b;--warn:#f2c14e;--bad:#ff6b6b;--blue:#5ca4ff
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;background:
+radial-gradient(800px 500px at 10% -10%,rgba(103,167,255,.16),transparent 55%),
+linear-gradient(180deg,var(--bg),var(--bg2));color:var(--text);min-height:100vh;padding-bottom:92px}
+.app{max-width:820px;margin:auto;padding:16px}
+.hero{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:8px 0 18px}
+h1{font-size:28px;line-height:1.05;margin:0 0 6px;letter-spacing:-.8px}
+.hero p{margin:0;color:var(--muted);font-size:14px}
+.badge{padding:8px 10px;border:1px solid var(--line);border-radius:999px;color:#cad6e6;font-size:12px;background:rgba(255,255,255,.025);white-space:nowrap}
+.panel{background:linear-gradient(180deg,var(--card),#0d1828);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 12px 34px rgba(0,0,0,.15)}
+.panel h2{font-size:18px;margin:0 0 6px}.sub{font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.45}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.metric{background:var(--card2);border:1px solid var(--line);border-radius:15px;padding:12px}
+.metric .k{font-size:12px;color:var(--muted)}.metric .v{font-size:20px;font-weight:800;margin-top:4px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.watch{display:grid;gap:10px}
+.asset{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025)}
+.name{font-weight:800}.tiny{font-size:11px;color:var(--muted)}.type{font-size:11px;color:var(--muted);margin-top:3px}
+.price{font-weight:800;text-align:right}.chg{font-size:12px;text-align:right;margin-top:4px}
+.good{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)}.muted{color:var(--muted)}
+.signal{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:800;background:#12243c}
+.signal.good{background:rgba(43,214,123,.12)}.signal.warn{background:rgba(242,193,78,.12)}.signal.bad{background:rgba(255,107,107,.12)}
+button{border:0;border-radius:13px;padding:11px 13px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;cursor:pointer}
+button.secondary{background:#182a44;border:1px solid var(--line);color:#dce7f6}
+button.ghost{background:transparent;border:1px solid var(--line);color:#c8d7eb}
+input,select{width:100%;background:#0a1525;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:11px 12px;font-size:15px;outline:none}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(7,16,29,.94);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:8px 10px calc(8px + env(safe-area-inset-bottom));z-index:10}
+.tabs-inner{max-width:820px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.tab{background:transparent;color:var(--muted);padding:10px 2px;border-radius:12px;font-size:11px}.tab.active{background:#152640;color:#fff}
+.screen{display:none}.screen.active{display:block}
+.split{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.scoreRing{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--good) calc(var(--p)*1%),#1b2b43 0);position:relative}
+.scoreRing:before{content:"";position:absolute;inset:8px;border-radius:50%;background:#0d1828}
+.scoreRing span{position:relative;font-size:22px;font-weight:900}
+.alert{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:15px;margin-bottom:9px}
+.alert small{color:var(--muted)}
+.note{font-size:12px;line-height:1.5;color:var(--muted)}
+.kv{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid rgba(33,54,83,.65)}
+.kv:last-child{border-bottom:0}.kv span:first-child{color:var(--muted);font-size:13px}.kv strong{font-size:13px;text-align:right}
+.holding{display:grid;grid-template-columns:1fr auto;gap:10px;padding:12px;border:1px solid var(--line);border-radius:15px;margin-bottom:9px}
+.mini{font-size:12px;color:var(--muted)}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+@media(max-width:560px){.grid,.row{grid-template-columns:1fr}.hero h1{font-size:25px}.tabs-inner{grid-template-columns:repeat(5,1fr)}}
+</style>
 </head>
 <body>
 <div class="app">
-  <div class="hero">
-    <div>
-      <h1>Keven Market Tracker</h1>
-      <p>Stocks + crypto opportunity dashboard</p>
-    </div>
-    <div class="badge">Personal • No auto-trading</div>
+ <div class="hero">
+  <div><h1>Keven Market Tracker</h1><p>V2 • live crypto • automatic opportunity signals</p></div>
+  <div class="badge">Personal • No auto-trading</div>
+ </div>
+
+ <section id="dash" class="screen active">
+  <div class="panel">
+   <div class="split">
+    <div><h2>Market Scan</h2><div class="sub">Refresh to pull live crypto data and re-score opportunities.</div></div>
+    <button class="secondary" onclick="refreshAll()">Refresh</button>
+   </div>
+   <div class="grid">
+    <div class="metric"><div class="k">Best opportunity</div><div class="v" id="bestAsset">—</div></div>
+    <div class="metric"><div class="k">Assets scoring 70+</div><div class="v" id="strongCount">0</div></div>
+    <div class="metric"><div class="k">Last refresh</div><div class="v" id="lastRefresh">Never</div></div>
+    <div class="metric"><div class="k">Mode</div><div class="v" id="modeText">Balanced</div></div>
+   </div>
   </div>
+  <div class="panel">
+   <h2>Ranked Watchlist</h2><div class="sub">Crypto scores are automatic after refresh. Stock prices can be updated manually in Details if the browser blocks the quote source.</div>
+   <div id="watchlist" class="watch"></div>
+  </div>
+ </section>
 
-  <section id="dashboard" class="screen active">
-    <div class="panel">
-      <div class="split">
-        <div>
-          <h2>Opportunity Snapshot</h2>
-          <div class="sub">Your watchlist ranked by your own 0–100 score.</div>
-        </div>
-        <button class="secondary" onclick="refreshCrypto()">Refresh crypto</button>
-      </div>
-      <div class="grid">
-        <div class="metric"><div class="k">Best opportunity</div><div class="v" id="bestAsset">—</div></div>
-        <div class="metric"><div class="k">Alert threshold</div><div class="v">70+</div></div>
-      </div>
-    </div>
-    <div class="panel">
-      <h2>Watchlist</h2>
-      <div class="sub">Tap an asset to edit its price and score.</div>
-      <div id="watchlist" class="watch"></div>
-    </div>
-  </section>
+ <section id="details" class="screen">
+  <div class="panel">
+   <div class="row">
+    <div><label>Asset</label><select id="detailAsset" onchange="loadDetails()"></select></div>
+    <div><label>Manual price override</label><input id="detailPrice" type="number" step="any" placeholder="Optional"></div>
+   </div>
+   <div class="split">
+    <div><h2 id="detailTitle">Asset Details</h2><div class="sub" id="detailSubtitle">—</div></div>
+    <div class="scoreRing" id="scoreRing" style="--p:0"><span id="detailScore">0</span></div>
+   </div>
+   <div id="detailStats"></div>
+   <hr>
+   <div class="kv"><span>Signal</span><strong id="detailSignal">—</strong></div>
+   <div class="kv"><span>Preferred entry</span><strong id="detailEntry">—</strong></div>
+   <div class="kv"><span>Risk level</span><strong id="detailRisk">—</strong></div>
+   <div class="kv"><span>Why it scored this way</span><strong id="detailWhy">—</strong></div>
+   <div style="margin-top:12px"><button onclick="saveManualPrice()">Save price</button></div>
+  </div>
+ </section>
 
-  <section id="scorer" class="screen">
-    <div class="panel">
-      <h2>Opportunity Scorer</h2>
-      <div class="sub">Weighted model: discount 25%, momentum 20%, fundamentals 20%, news 15%, valuation 10%, risk quality 10%.</div>
-      <div class="row">
-        <div><label>Asset</label><select id="scoreAsset" onchange="loadScoreAsset()"></select></div>
-        <div><label>Current price</label><input id="scorePrice" type="number" step="any" placeholder="Enter price"></div>
-      </div>
-      <div id="ranges"></div>
-      <div class="panel" style="margin:12px 0 0;background:#0a1525">
-        <div class="split">
-          <div>
-            <div class="scorebox" id="totalScore">0</div>
-            <div class="status" id="scoreStatus">Avoid for now</div>
-          </div>
-          <button onclick="saveScore()">Save score</button>
-        </div>
-      </div>
-    </div>
-  </section>
+ <section id="calc" class="screen">
+  <div class="panel">
+   <h2>Investment Calculator</h2><div class="sub">See what a percentage move does to your money.</div>
+   <div class="row"><div><label>Amount invested</label><input id="investAmt" type="number" value="60"></div><div><label>Price move (%)</label><input id="movePct" type="number" value="25"></div></div>
+   <div class="grid"><div class="metric"><div class="k">Profit / loss</div><div class="v" id="calcProfit">$15.00</div></div><div class="metric"><div class="k">New value</div><div class="v" id="calcTotal">$75.00</div></div></div>
+   <div class="three" style="margin-top:10px"><button class="ghost" onclick="quickAmt(30)">$30</button><button class="ghost" onclick="quickAmt(60)">$60</button><button class="ghost" onclick="quickAmt(150)">$150</button></div>
+  </div>
+  <div class="panel">
+   <h2>Goal Calculator</h2>
+   <div class="row"><div><label>Starting amount</label><input id="goalStart" type="number" value="60"></div><div><label>Goal</label><input id="goalEnd" type="number" value="1000"></div></div>
+   <div class="metric"><div class="k">Required gain</div><div class="v" id="goalPct">1,566.7%</div></div>
+  </div>
+ </section>
 
-  <section id="calculator" class="screen">
-    <div class="panel">
-      <h2>Investment Calculator</h2>
-      <div class="sub">See what a move would do to your money.</div>
-      <div class="row">
-        <div><label>Amount invested</label><input id="investAmt" type="number" value="60"></div>
-        <div><label>Price move (%)</label><input id="movePct" type="number" value="25"></div>
-      </div>
-      <div class="grid">
-        <div class="metric"><div class="k">Profit / loss</div><div class="v" id="calcProfit">$15.00</div></div>
-        <div class="metric"><div class="k">New value</div><div class="v" id="calcTotal">$75.00</div></div>
-      </div>
-      <div class="three" style="margin-top:10px">
-        <button class="ghost" onclick="quickAmt(30)">$30</button>
-        <button class="ghost" onclick="quickAmt(60)">$60</button>
-        <button class="ghost" onclick="quickAmt(150)">$150</button>
-      </div>
-    </div>
-    <div class="panel">
-      <h2>Goal Calculator</h2>
-      <div class="row">
-        <div><label>Starting amount</label><input id="goalStart" type="number" value="60"></div>
-        <div><label>Goal</label><input id="goalEnd" type="number" value="1000"></div>
-      </div>
-      <div class="metric"><div class="k">Required gain</div><div class="v" id="goalPct">1,566.7%</div></div>
-    </div>
-  </section>
+ <section id="portfolio" class="screen">
+  <div class="panel">
+   <h2>My Holdings</h2><div class="sub">Private to this device. Add anything you own to see estimated value and P/L.</div>
+   <div id="holdings"></div>
+   <div class="row"><div><label>Symbol</label><input id="holdSymbol" placeholder="NVDA"></div><div><label>Shares / coins</label><input id="holdQty" type="number" step="any" placeholder="0.06857"></div></div>
+   <div class="row"><div><label>Average buy price</label><input id="holdAvg" type="number" step="any" placeholder="218.76"></div><div><label>Current price</label><input id="holdNow" type="number" step="any" placeholder="Optional"></div></div>
+   <button onclick="addHolding()">Add holding</button>
+  </div>
+ </section>
 
-  <section id="alerts" class="screen">
-    <div class="panel">
-      <h2>Price Alerts</h2>
-      <div class="sub">Stored on this device. Background alerts are still best handled by your ChatGPT scheduled alerts.</div>
-      <div id="alertList"></div>
-      <div class="row">
-        <div><label>Symbol</label><input id="alertSymbol" placeholder="e.g. ADA"></div>
-        <div><label>Price below</label><input id="alertPrice" type="number" step="any" placeholder="0.1898"></div>
-      </div>
-      <button onclick="addAlert()">Add alert</button>
-    </div>
-    <div class="panel">
-      <h2>Settings</h2>
-      <div class="row">
-        <div><label>Style</label>
-          <select id="riskStyle" onchange="saveSettings()">
-            <option value="balanced">Balanced</option>
-            <option value="aggressive">Aggressive</option>
-            <option value="conservative">Conservative</option>
-          </select>
-        </div>
-        <div><label>Minimum score to flag</label><input id="minScore" type="number" value="70" onchange="saveSettings()"></div>
-      </div>
-      <p class="note">This app is an analysis tool, not financial advice. It does not place trades or guarantee that an asset will rise.</p>
-    </div>
-  </section>
+ <section id="alerts" class="screen">
+  <div class="panel">
+   <h2>Price Alerts</h2><div class="sub">These are stored in the app. Use your ChatGPT scheduled alerts for reliable background notifications.</div>
+   <div id="alertList"></div>
+   <div class="row"><div><label>Symbol</label><input id="alertSymbol" placeholder="ADA"></div><div><label>Notify below</label><input id="alertPrice" type="number" step="any" placeholder="0.1898"></div></div>
+   <button onclick="addAlert()">Add alert</button>
+  </div>
+  <div class="panel">
+   <h2>Personalization</h2>
+   <div class="row"><div><label>Risk style</label><select id="riskStyle" onchange="saveSettings();rescoreAll()"><option value="balanced">Balanced</option><option value="aggressive">Aggressive</option><option value="conservative">Conservative</option></select></div>
+   <div><label>Flag opportunities at</label><input id="minScore" type="number" value="70" onchange="saveSettings();renderWatchlist()"></div></div>
+   <p class="note">Signals are screening aids, not guarantees or financial advice. The model can be wrong, especially during fast markets.</p>
+  </div>
+ </section>
 </div>
 
-<nav class="tabs">
-  <div class="tabs-inner">
-    <button class="tab active" onclick="showTab('dashboard',this)">Dashboard</button>
-    <button class="tab" onclick="showTab('scorer',this)">Scorer</button>
-    <button class="tab" onclick="showTab('calculator',this)">Calculator</button>
-    <button class="tab" onclick="showTab('alerts',this)">Alerts</button>
-  </div>
-</nav>
+<nav class="tabs"><div class="tabs-inner">
+ <button class="tab active" onclick="showTab('dash',this)">Dashboard</button>
+ <button class="tab" onclick="showTab('details',this)">Details</button>
+ <button class="tab" onclick="showTab('calc',this)">Calculator</button>
+ <button class="tab" onclick="showTab('portfolio',this)">Holdings</button>
+ <button class="tab" onclick="showTab('alerts',this)">Alerts</button>
+</div></nav>
 
 <script>
-const defaultAssets = [
-  {s:'BTC', n:'Bitcoin', t:'crypto', cg:'bitcoin'},
-  {s:'ETH', n:'Ethereum', t:'crypto', cg:'ethereum'},
-  {s:'SOL', n:'Solana', t:'crypto', cg:'solana'},
-  {s:'ADA', n:'Cardano', t:'crypto', cg:'cardano'},
-  {s:'NVDA', n:'NVIDIA', t:'stock'},
-  {s:'TSLA', n:'Tesla', t:'stock'},
-  {s:'AMZN', n:'Amazon', t:'stock'},
-  {s:'GOOGL', n:'Alphabet', t:'stock'},
-  {s:'META', n:'Meta', t:'stock'},
-  {s:'VOO', n:'Vanguard S&P 500 ETF', t:'fund'},
-  {s:'QQQ', n:'Invesco QQQ', t:'fund'}
+const defaults=[
+ {s:'BTC',n:'Bitcoin',t:'crypto',cg:'bitcoin',fund:95},
+ {s:'ETH',n:'Ethereum',t:'crypto',cg:'ethereum',fund:90},
+ {s:'SOL',n:'Solana',t:'crypto',cg:'solana',fund:82},
+ {s:'ADA',n:'Cardano',t:'crypto',cg:'cardano',fund:72},
+ {s:'NVDA',n:'NVIDIA',t:'stock',fund:93},
+ {s:'TSLA',n:'Tesla',t:'stock',fund:78},
+ {s:'AMZN',n:'Amazon',t:'stock',fund:90},
+ {s:'GOOGL',n:'Alphabet',t:'stock',fund:92},
+ {s:'META',n:'Meta',t:'stock',fund:90},
+ {s:'VOO',n:'Vanguard S&P 500 ETF',t:'fund',fund:96},
+ {s:'QQQ',n:'Invesco QQQ',t:'fund',fund:91}
 ];
-let assets = JSON.parse(localStorage.getItem('kmt_assets')||'null') || defaultAssets.map(a=>({...a,price:null,score:0,signals:{discount:50,momentum:50,fundamentals:50,news:50,valuation:50,risk:50}}));
-let alerts = JSON.parse(localStorage.getItem('kmt_alerts')||'null') || [
-  {symbol:'SOL', price:98},
-  {symbol:'ADA', price:0.1898}
-];
+let assets=JSON.parse(localStorage.getItem('kmt2_assets')||'null')||defaults.map(x=>({...x,price:null,p24:null,p7:null,p30:null,athDraw:null,mcapRank:null,score:0,signal:'WAIT',entry:null,risk:'—',why:'Not scored yet'}));
+let alerts=JSON.parse(localStorage.getItem('kmt2_alerts')||'null')||[{symbol:'ADA',price:.1898}];
+let holdings=JSON.parse(localStorage.getItem('kmt2_holdings')||'[]');
+let settings=JSON.parse(localStorage.getItem('kmt2_settings')||'{"riskStyle":"balanced","minScore":70}');
 
-const weights = {discount:.25,momentum:.20,fundamentals:.20,news:.15,valuation:.10,risk:.10};
-const labels = {
-  discount:'Price discount', momentum:'Momentum', fundamentals:'Fundamentals',
-  news:'News / sentiment', valuation:'Valuation', risk:'Risk quality'
-};
-
-function saveAssets(){localStorage.setItem('kmt_assets',JSON.stringify(assets))}
-function money(v){
-  if(v===null || v===undefined || isNaN(v)) return '—';
-  if(v<1) return '$'+Number(v).toFixed(4);
-  return '$'+Number(v).toLocaleString(undefined,{maximumFractionDigits:2});
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function money(v){if(v===null||v===undefined||isNaN(v))return '—';if(Math.abs(v)<1)return '$'+Number(v).toFixed(4);return '$'+Number(v).toLocaleString(undefined,{maximumFractionDigits:2})}
+function pct(v){if(v===null||v===undefined||isNaN(v))return '—';return (v>=0?'+':'')+Number(v).toFixed(1)+'%'}
+function saveAssets(){localStorage.setItem('kmt2_assets',JSON.stringify(assets))}
+function saveHoldings(){localStorage.setItem('kmt2_holdings',JSON.stringify(holdings))}
+function scoreLabel(s){if(s>=85)return['STRONG BUY ZONE','good'];if(s>=70)return['CONSIDER','good'];if(s>=55)return['WATCH','warn'];if(s>=40)return['WAIT','warn'];return['AVOID','bad']}
+function riskFor(a){
+ if(a.t==='fund') return 'Lower';
+ if(a.t==='stock') return a.s==='TSLA'?'High':'Medium';
+ if(a.s==='BTC') return 'High';
+ if(a.s==='ETH') return 'High';
+ return 'Very high';
 }
-function statusFor(score){
-  if(score>=85) return ['Strong opportunity','good'];
-  if(score>=70) return ['Consider buying','good'];
-  if(score>=55) return ['Watch / wait','mid'];
-  if(score>=40) return ['Avoid for now','mid'];
-  return ['High risk / weak setup','bad'];
+function computeScore(a){
+ if(a.t!=='crypto' || a.price===null){
+   // For stocks/funds, use a neutral starting score based on quality until user supplies richer data.
+   let base=Math.round(a.fund*.55);
+   if(a.price!==null) base+=10;
+   a.score=clamp(base,0,100);
+   a.signal=scoreLabel(a.score)[0];
+   a.entry=a.price?`${money(a.price*.95)}–${money(a.price*.99)}`:'Set current price';
+   a.risk=riskFor(a);
+   a.why='Stock/fund score is conservative until live fundamentals and price-history data are connected.';
+   return;
+ }
+ const discount=clamp((Math.abs(a.athDraw||0)-10)*1.25,10,95);
+ const mom7=clamp(50+(a.p7||0)*2.2,0,100);
+ const mom30=clamp(50+(a.p30||0)*1.1,0,100);
+ const momentum=Math.round(mom7*.65+mom30*.35);
+ const fundamentals=a.fund;
+ const news=50; // neutral: no news feed in local app
+ const valuation=clamp(100-(a.mcapRank||50)*1.2,25,95);
+ const riskQuality= a.s==='BTC'?85:a.s==='ETH'?78:a.s==='SOL'?62:55;
+ let score=discount*.25+momentum*.20+fundamentals*.20+news*.15+valuation*.10+riskQuality*.10;
+ if(settings.riskStyle==='aggressive' && ['SOL','ADA'].includes(a.s)) score+=5;
+ if(settings.riskStyle==='conservative' && a.t==='crypto') score-=7;
+ a.score=Math.round(clamp(score,0,100));
+ a.signal=scoreLabel(a.score)[0];
+ const width = a.score>=70 ? [.94,.99] : [.90,.96];
+ a.entry=`${money(a.price*width[0])}–${money(a.price*width[1])}`;
+ a.risk=riskFor(a);
+ const parts=[];
+ if((a.p7||0)<-5)parts.push('7-day pullback');
+ if((a.p7||0)>5)parts.push('positive 7-day momentum');
+ if(Math.abs(a.athDraw||0)>40)parts.push('well below ATH');
+ if((a.mcapRank||999)<=10)parts.push('large-cap liquidity');
+ a.why=parts.length?parts.join(', '):'Mixed momentum and valuation signals';
 }
+function rescoreAll(){assets.forEach(computeScore);saveAssets();renderWatchlist();loadDetails()}
 function renderWatchlist(){
-  const box=document.getElementById('watchlist'); box.innerHTML='';
-  [...assets].sort((a,b)=>b.score-a.score).forEach(a=>{
-    const [st,cls]=statusFor(a.score);
-    const el=document.createElement('div'); el.className='asset';
-    el.innerHTML=`<div><div class="name">${a.s} <span class="tiny">• ${a.n}</span></div><div class="type">${a.t.toUpperCase()}</div></div>
-    <div><div class="price">${money(a.price)}</div><div class="score ${cls}">${a.score}/100 • ${st}</div></div>`;
-    el.onclick=()=>{showTab('scorer',document.querySelectorAll('.tab')[1]);document.getElementById('scoreAsset').value=a.s;loadScoreAsset();}
-    box.appendChild(el);
-  });
-  const best=[...assets].sort((a,b)=>b.score-a.score)[0];
-  document.getElementById('bestAsset').textContent=best && best.score? `${best.s} ${best.score}`:'—';
-}
-function buildScoreSelect(){
-  const s=document.getElementById('scoreAsset');
-  s.innerHTML=assets.map(a=>`<option>${a.s}</option>`).join('');
-}
-function buildRanges(){
-  const wrap=document.getElementById('ranges'); wrap.innerHTML='';
-  Object.keys(weights).forEach(k=>{
-    const div=document.createElement('div'); div.className='rangegrid';
-    div.innerHTML=`<div><label>${labels[k]} (${Math.round(weights[k]*100)}%)</label><input id="r_${k}" type="range" min="0" max="100" value="50" oninput="updateScore()"></div>
-    <input id="n_${k}" type="number" min="0" max="100" value="50" oninput="syncNumber('${k}')">`;
-    wrap.appendChild(div);
-  });
-}
-function loadScoreAsset(){
-  const a=assets.find(x=>x.s===document.getElementById('scoreAsset').value); if(!a)return;
-  document.getElementById('scorePrice').value=a.price??'';
-  Object.keys(weights).forEach(k=>{
-    const v=(a.signals&&a.signals[k]!==undefined)?a.signals[k]:50;
-    document.getElementById('r_'+k).value=v;document.getElementById('n_'+k).value=v;
-  }); updateScore();
-}
-function syncNumber(k){
-  let v=Math.max(0,Math.min(100,Number(document.getElementById('n_'+k).value||0)));
-  document.getElementById('r_'+k).value=v; updateScore();
-}
-function updateScore(){
-  let total=0;
-  Object.keys(weights).forEach(k=>{
-    let v=Number(document.getElementById('r_'+k).value);
-    document.getElementById('n_'+k).value=v; total += v*weights[k];
-  });
-  total=Math.round(total);
-  const [st,cls]=statusFor(total);
-  document.getElementById('totalScore').textContent=total;
-  const e=document.getElementById('scoreStatus'); e.textContent=st; e.className='status score '+cls;
-}
-function saveScore(){
-  const a=assets.find(x=>x.s===document.getElementById('scoreAsset').value);
-  a.price=document.getElementById('scorePrice').value===''?null:Number(document.getElementById('scorePrice').value);
-  a.signals={}; let total=0;
-  Object.keys(weights).forEach(k=>{let v=Number(document.getElementById('r_'+k).value);a.signals[k]=v;total+=v*weights[k]});
-  a.score=Math.round(total); saveAssets(); renderWatchlist();
-  alert('Saved '+a.s+' score.');
+ const box=document.getElementById('watchlist');box.innerHTML='';
+ const sorted=[...assets].sort((a,b)=>b.score-a.score);
+ sorted.forEach(a=>{
+   const [lab,cls]=scoreLabel(a.score);
+   const el=document.createElement('div');el.className='asset';
+   el.innerHTML=`<div><div class="name">${a.s} <span class="tiny">• ${a.n}</span></div><div class="type">${a.t.toUpperCase()} • <span class="signal ${cls}">${lab}</span></div></div>
+   <div><div class="price">${money(a.price)}</div><div class="chg ${a.p7===null?'muted':(a.p7>=0?'good':'bad')}">${a.p7===null?`${a.score}/100`:`7D ${pct(a.p7)} • ${a.score}/100`}</div></div>`;
+   el.onclick=()=>{showTab('details',document.querySelectorAll('.tab')[1]);document.getElementById('detailAsset').value=a.s;loadDetails()}
+   box.appendChild(el);
+ });
+ const best=sorted[0];
+ document.getElementById('bestAsset').textContent=best && best.score?`${best.s} ${best.score}/100`:'—';
+ document.getElementById('strongCount').textContent=assets.filter(a=>a.score>=Number(settings.minScore||70)).length;
+ document.getElementById('modeText').textContent=(settings.riskStyle||'balanced').replace(/^./,c=>c.toUpperCase());
 }
 async function refreshCrypto(){
-  const ids=assets.filter(a=>a.cg).map(a=>a.cg).join(',');
-  try{
-    const url='https://api.coingecko.com/api/v3/simple/price?ids='+encodeURIComponent(ids)+'&vs_currencies=usd';
-    const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status);
-    const d=await r.json();
-    assets.forEach(a=>{if(a.cg && d[a.cg]) a.price=d[a.cg].usd;});
-    saveAssets(); renderWatchlist(); alert('Crypto prices refreshed.');
-  }catch(e){
-    alert('Live crypto refresh was blocked or rate-limited. You can still enter prices manually in the Scorer.');
-  }
+ const ids=assets.filter(a=>a.cg).map(a=>a.cg).join(',');
+ const url=`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${encodeURIComponent(ids)}&price_change_percentage=24h,7d,30d`;
+ const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error('Crypto API '+r.status);
+ const data=await r.json();
+ data.forEach(d=>{
+  const a=assets.find(x=>x.cg===d.id); if(!a)return;
+  a.price=d.current_price;
+  a.p24=d.price_change_percentage_24h_in_currency??d.price_change_percentage_24h;
+  a.p7=d.price_change_percentage_7d_in_currency??null;
+  a.p30=d.price_change_percentage_30d_in_currency??null;
+  a.athDraw=d.ath_change_percentage;
+  a.mcapRank=d.market_cap_rank;
+ });
+}
+async function refreshStock(a){
+ // Stooq is attempted as a lightweight, keyless quote source. If CORS blocks it, the app simply keeps manual mode.
+ const sym=a.s.toLowerCase()+'.us';
+ const u=`https://stooq.com/q/l/?s=${sym}&f=sd2t2ohlcv&h&e=csv`;
+ try{
+  const r=await fetch(u,{cache:'no-store'}); if(!r.ok) return;
+  const txt=await r.text();
+  const lines=txt.trim().split(/\r?\n/); if(lines.length<2)return;
+  const vals=lines[1].split(',');
+  const close=Number(vals[6]);
+  if(Number.isFinite(close)&&close>0)a.price=close;
+ }catch(e){}
+}
+async function refreshAll(){
+ const btn=event?.target; if(btn){btn.disabled=true;btn.textContent='Refreshing…'}
+ try{
+   await refreshCrypto();
+   await Promise.all(assets.filter(a=>a.t!=='crypto').map(refreshStock));
+   assets.forEach(computeScore);saveAssets();renderWatchlist();loadDetails();checkAlerts();
+   const now=new Date();localStorage.setItem('kmt2_refresh',now.toISOString());document.getElementById('lastRefresh').textContent=now.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+ }catch(e){alert('Live refresh had a problem. Crypto or stock quote sources may be rate-limited. Manual prices still work.')}
+ finally{if(btn){btn.disabled=false;btn.textContent='Refresh'}}
+}
+function buildDetailSelect(){document.getElementById('detailAsset').innerHTML=assets.map(a=>`<option>${a.s}</option>`).join('')}
+function loadDetails(){
+ const a=assets.find(x=>x.s===document.getElementById('detailAsset').value)||assets[0];
+ document.getElementById('detailTitle').textContent=`${a.s} • ${a.n}`;
+ document.getElementById('detailSubtitle').textContent=`${a.t.toUpperCase()} • Current ${money(a.price)}`;
+ document.getElementById('detailPrice').value=a.price??'';
+ document.getElementById('detailScore').textContent=a.score;
+ document.getElementById('scoreRing').style.setProperty('--p',a.score);
+ document.getElementById('detailStats').innerHTML= a.t==='crypto'
+ ? `<div class="kv"><span>24h</span><strong>${pct(a.p24)}</strong></div><div class="kv"><span>7 day</span><strong>${pct(a.p7)}</strong></div><div class="kv"><span>30 day</span><strong>${pct(a.p30)}</strong></div><div class="kv"><span>From ATH</span><strong>${pct(a.athDraw)}</strong></div><div class="kv"><span>Market-cap rank</span><strong>${a.mcapRank?'#'+a.mcapRank:'—'}</strong></div>`
+ : `<div class="kv"><span>Current price</span><strong>${money(a.price)}</strong></div><div class="kv"><span>Data mode</span><strong>${a.price?'Price loaded / manual':'Manual fallback'}</strong></div>`;
+ document.getElementById('detailSignal').textContent=a.signal;
+ document.getElementById('detailEntry').textContent=a.entry||'—';
+ document.getElementById('detailRisk').textContent=a.risk;
+ document.getElementById('detailWhy').textContent=a.why;
+}
+function saveManualPrice(){
+ const a=assets.find(x=>x.s===document.getElementById('detailAsset').value);
+ const v=Number(document.getElementById('detailPrice').value); if(!Number.isFinite(v)||v<=0)return alert('Enter a valid price.');
+ a.price=v;computeScore(a);saveAssets();renderWatchlist();loadDetails();alert('Price saved.');
 }
 function calc(){
-  const a=Number(document.getElementById('investAmt').value||0), p=Number(document.getElementById('movePct').value||0);
-  const prof=a*p/100, tot=a+prof;
-  document.getElementById('calcProfit').textContent=(prof<0?'-$':'$')+Math.abs(prof).toFixed(2);
-  document.getElementById('calcTotal').textContent='$'+tot.toFixed(2);
-  const gs=Number(document.getElementById('goalStart').value||0), ge=Number(document.getElementById('goalEnd').value||0);
-  document.getElementById('goalPct').textContent=gs>0?(((ge/gs)-1)*100).toLocaleString(undefined,{maximumFractionDigits:1})+'%':'—';
+ const a=Number(document.getElementById('investAmt').value||0),p=Number(document.getElementById('movePct').value||0),prof=a*p/100,tot=a+prof;
+ document.getElementById('calcProfit').textContent=(prof<0?'-$':'$')+Math.abs(prof).toFixed(2);
+ document.getElementById('calcTotal').textContent='$'+tot.toFixed(2);
+ const s=Number(document.getElementById('goalStart').value||0),g=Number(document.getElementById('goalEnd').value||0);
+ document.getElementById('goalPct').textContent=s>0?(((g/s)-1)*100).toLocaleString(undefined,{maximumFractionDigits:1})+'%':'—';
 }
 function quickAmt(v){document.getElementById('investAmt').value=v;calc()}
 ['investAmt','movePct','goalStart','goalEnd'].forEach(id=>document.getElementById(id).addEventListener('input',calc));
+function renderHoldings(){
+ const box=document.getElementById('holdings');box.innerHTML='';
+ holdings.forEach((h,i)=>{
+  const match=assets.find(a=>a.s===h.symbol);const cur=h.now||match?.price||null;
+  const cost=h.qty*h.avg, val=cur?cur*h.qty:null, pl=val!==null?val-cost:null;
+  const el=document.createElement('div');el.className='holding';
+  el.innerHTML=`<div><div class="name">${h.symbol}</div><div class="mini">${h.qty} units • Avg ${money(h.avg)}</div></div><div style="text-align:right"><div class="price">${val===null?'—':money(val)}</div><div class="chg ${pl===null?'muted':pl>=0?'good':'bad'}">${pl===null?'Add current price':(pl>=0?'+':'')+money(pl)}</div><button class="ghost" style="margin-top:7px;padding:6px 9px" onclick="removeHolding(${i})">Remove</button></div>`;
+  box.appendChild(el);
+ });
+}
+function addHolding(){
+ const symbol=document.getElementById('holdSymbol').value.trim().toUpperCase(),qty=Number(document.getElementById('holdQty').value),avg=Number(document.getElementById('holdAvg').value),now=Number(document.getElementById('holdNow').value)||null;
+ if(!symbol||!qty||!avg)return alert('Enter symbol, quantity, and average buy price.');
+ holdings.push({symbol,qty,avg,now});saveHoldings();renderHoldings();
+ ['holdSymbol','holdQty','holdAvg','holdNow'].forEach(id=>document.getElementById(id).value='');
+}
+function removeHolding(i){holdings.splice(i,1);saveHoldings();renderHoldings()}
 function renderAlerts(){
-  const box=document.getElementById('alertList');box.innerHTML='';
-  alerts.forEach((a,i)=>{
-    const el=document.createElement('div');el.className='alert';
-    el.innerHTML=`<div><strong>${a.symbol}</strong><small>Notify below ${money(a.price)}</small></div><button class="ghost" onclick="removeAlert(${i})">Remove</button>`;
-    box.appendChild(el);
-  });
-  localStorage.setItem('kmt_alerts',JSON.stringify(alerts));
+ const box=document.getElementById('alertList');box.innerHTML='';
+ alerts.forEach((a,i)=>{
+  const el=document.createElement('div');el.className='alert';
+  el.innerHTML=`<div><strong>${a.symbol}</strong><small>Notify below ${money(a.price)}</small></div><button class="ghost" onclick="removeAlert(${i})">Remove</button>`;
+  box.appendChild(el);
+ });localStorage.setItem('kmt2_alerts',JSON.stringify(alerts));
 }
 function addAlert(){
-  const s=document.getElementById('alertSymbol').value.trim().toUpperCase(), p=Number(document.getElementById('alertPrice').value);
-  if(!s||!p) return alert('Enter a symbol and target price.');
-  alerts.push({symbol:s,price:p});renderAlerts();document.getElementById('alertSymbol').value='';document.getElementById('alertPrice').value='';
+ const symbol=document.getElementById('alertSymbol').value.trim().toUpperCase(),price=Number(document.getElementById('alertPrice').value);
+ if(!symbol||!price)return alert('Enter a symbol and target price.');
+ alerts.push({symbol,price});renderAlerts();document.getElementById('alertSymbol').value='';document.getElementById('alertPrice').value='';
 }
 function removeAlert(i){alerts.splice(i,1);renderAlerts()}
+function checkAlerts(){
+ const hits=alerts.filter(al=>{const a=assets.find(x=>x.s===al.symbol);return a?.price!=null&&a.price<al.price});
+ if(hits.length) alert('Price alert: '+hits.map(h=>`${h.symbol} is below ${money(h.price)}`).join(' • '));
+}
 function saveSettings(){
-  localStorage.setItem('kmt_settings',JSON.stringify({riskStyle:document.getElementById('riskStyle').value,minScore:Number(document.getElementById('minScore').value||70)}));
+ settings={riskStyle:document.getElementById('riskStyle').value,minScore:Number(document.getElementById('minScore').value||70)};
+ localStorage.setItem('kmt2_settings',JSON.stringify(settings));
 }
 function loadSettings(){
-  const s=JSON.parse(localStorage.getItem('kmt_settings')||'{}');
-  if(s.riskStyle)document.getElementById('riskStyle').value=s.riskStyle;
-  if(s.minScore)document.getElementById('minScore').value=s.minScore;
+ document.getElementById('riskStyle').value=settings.riskStyle||'balanced';
+ document.getElementById('minScore').value=settings.minScore||70;
 }
 function showTab(id,btn){
-  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-  if(btn)btn.classList.add('active');
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');
 }
-buildScoreSelect();buildRanges();loadScoreAsset();renderWatchlist();renderAlerts();loadSettings();calc();
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+buildDetailSelect();loadSettings();assets.forEach(computeScore);renderWatchlist();loadDetails();renderAlerts();renderHoldings();calc();
+const lr=localStorage.getItem('kmt2_refresh');if(lr)document.getElementById('lastRefresh').textContent=new Date(lr).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body>
 </html>

@@ -1,10 +1,10 @@
 {
-  "name": "Keven Market Tracker",
+  "name": "Keven Market Tracker V2",
   "short_name": "Keven Tracker",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#07101d",
-  "theme_color": "#0b1220",
+  "theme_color": "#07101d",
   "icons": [
     {
       "src": "icon-180.png",

@@ -1,21 +1,24 @@
-Keven Market Tracker
+Keven Market Tracker V2
 
-What it includes
-- Watchlist: BTC, ETH, SOL, ADA, NVDA, TSLA, AMZN, GOOGL, META, VOO, QQQ
-- Opportunity scoring model (0-100)
-- Investment and goal calculators
-- Personal price-alert list stored on your device
-- Crypto price refresh through CoinGecko when available
-- Local storage so your scores/settings persist
-- No automatic trading
+UPGRADES
+- Live crypto prices and 24h / 7d / 30d movement from CoinGecko
+- Automatic opportunity score and BUY/WATCH/WAIT-style screening signal
+- Preferred entry-range estimate
+- Risk level and plain-language score explanation
+- Attempts keyless stock/fund quotes from Stooq, with manual fallback
+- Private holdings tracker stored only in the browser on this device
+- Investment calculator and goal calculator
+- Personal alert list and in-app alert check after refresh
+- Risk-style personalization: balanced / aggressive / conservative
+- Offline shell via service worker
 
-Important
-The app itself cannot reliably send background price alerts when closed. Keep using your ChatGPT scheduled alerts for actual notifications.
+IMPORTANT
+- No automatic trading.
+- No guarantee an asset will rise.
+- Background alerts while the app is closed still require an external service; keep ChatGPT scheduled alerts for that.
+- Stock/fund scoring is intentionally conservative until a richer live fundamentals feed is connected.
 
-How to use on iPhone
-1. Put this folder on a simple HTTPS host such as GitHub Pages, Netlify, or Vercel.
-2. Open the hosted page in Safari.
-3. Tap Share > Add to Home Screen.
-4. It will open like an app.
+GITHUB UPDATE
+Replace the old index.html, manifest.webmanifest, sw.js, icon-180.png, icon-512.png and README.txt in your repository with the V2 files, then commit to main. GitHub Pages should redeploy automatically.
 
-You can also open index.html directly to preview it, but install-to-home-screen works best when served over HTTPS.
+If the old version is cached on iPhone, fully close the Home Screen app and reopen it. If needed, delete the Home Screen icon and add it again from Safari.
